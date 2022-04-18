@@ -1,4 +1,5 @@
 import os
+from socket import timeout
 import sys
 from graph import Graph
 from nod_parcurgere import NodParcurgere
@@ -59,4 +60,21 @@ if __name__ == "__main__":
         f_out.write("\nA_STAR_OPTIMIZAT (euristica 2): \n\n")
         t0 = time()
         a_star_optimizat(gr, f_out, t0, euristica="admisibila 2", timeout = TIMEOUT)
-        # ida_star(gr, 5)
+        f_out.write("\nA_STAR_OPTIMIZAT (euristica banala): \n\n")
+        t0 = time()
+        a_star_optimizat(gr, f_out, t0, euristica="banala", timeout = TIMEOUT)
+        f_out.write("\nA_STAR_OPTIMIZAT (gresita): \n\n")
+        t0 = time()
+        a_star_optimizat(gr, f_out, t0, euristica="gresita", timeout = TIMEOUT)
+        f_out.write("\nIDA STAR (euristica 1): \n\n")
+        t0 = time()
+        ida_star(gr, NSOL,f_out, t0, "admisibila 1", timeout = TIMEOUT)
+        f_out.write("\nIDA STAR (euristica 2): \n\n")
+        t0 = time()
+        ida_star(gr, NSOL,f_out, t0, "admisibila 2", timeout = TIMEOUT)
+        f_out.write("\nIDA STAR (banala): \n\n")
+        t0 = time()
+        ida_star(gr, NSOL,f_out, t0, "banala", timeout = TIMEOUT)
+        f_out.write("\nIDA STAR (gresita): \n\n")
+        t0 = time()
+        ida_star(gr, NSOL,f_out, t0, "gresita", timeout = TIMEOUT)

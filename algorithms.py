@@ -144,25 +144,27 @@ def a_star_optimizat(gr: Graph, f_out, t0, euristica = "admisibila 2"):
                 l_open.append(s)
 
 @stopit.threading_timeoutable(default="Timed out")
-def ida_star(gr: Graph, nr_solutii_cautate, f_out, t0):
+def ida_star(gr: Graph, nr_solutii_cautate, f_out, t0, euristica):
     NodParcurgere.reset_drumuri()
     nodStart=NodParcurgere(gr.start,None)
+    nodStart.h = gr.calculeaza_h(nodStart, euristica)
+    nodStart.calculeaza_f()
     limita=nodStart.f
     while True:
 
-        print("Limita de pornire: ", limita)
-        nr_solutii_cautate, rez= construieste_drum(gr, nodStart,limita,nr_solutii_cautate, f_out, t0)
+        # f_out.write(f"Limita de pornire: , {limita}\n")
+        nr_solutii_cautate, rez= construieste_drum(gr, nodStart,limita,nr_solutii_cautate, f_out, t0, euristica)
         if rez=="gata":
             break
         if rez==float('inf'):
-            print("Nu mai exista solutii!")
+            f_out.write("Nu mai exista solutii!\n")
             break
         limita=rez
-        print(">>> Limita noua: ", limita)
+        # f_out.write(f">>> Limita noua: , {limita}\n")
 
 
-def construieste_drum(gr:Graph, nod_curent:NodParcurgere, limita, nr_solutii_cautate, f_out, t0):
-    print("A ajuns la: ", nod_curent)
+def construieste_drum(gr:Graph, nod_curent:NodParcurgere, limita, nr_solutii_cautate, f_out, t0, euristica):
+    # f_out.write(f"A ajuns la:  {nod_curent}")
     if nod_curent.f>limita:
         return nr_solutii_cautate, nod_curent.f
     if gr.testeaza_scop(nod_curent) and nod_curent.f==limita :
@@ -175,16 +177,16 @@ def construieste_drum(gr:Graph, nod_curent:NodParcurgere, limita, nr_solutii_cau
         if nr_solutii_cautate==0:
             return 0, "gata"
 
-    lSuccesori=gr.genereaza_succesori(nod_curent)	
+    lSuccesori=gr.genereaza_succesori(nod_curent, euristica)	
     minim=float('inf')
     for s in lSuccesori:
-        nr_solutii_cautate, rez=construieste_drum(gr, s, limita, nr_solutii_cautate, f_out, t0)
+        nr_solutii_cautate, rez=construieste_drum(gr, s, limita, nr_solutii_cautate, f_out, t0, euristica)
         if rez=="gata":
             return 0,"gata"
 
-        print("Compara ", rez, " cu ", minim)
+        # f_out.write(f"Compara  {rez}  cu  {minim}\n")
         if rez<minim:
             minim=rez
-            print("Noul minim: ", minim)
+            # f_out.write(f"Noul minim:  {minim}\n")
     return nr_solutii_cautate, minim
 

@@ -2,6 +2,14 @@ from copy import deepcopy
 
 
 class Incuietoare:
+
+    """
+    Lacatul este format din mai multe incuietori 
+
+    value = 1+ / 0 daca este inchis / deschis 
+    truc : bool incuietoarea este cu truc sau nu 
+    nod_afectat: nodul pe care incuietoarea il inchide daca aceasta este cu truc
+    """
     def __init__(self, value = 1, truc = False, nod_afectat = -1):
         self.value = value
         self.truc = truc
@@ -27,14 +35,24 @@ class Incuietoare:
 
 class NodParcurgere:
 
-    drumuri_parcurse = [{}]
+    drumuri_parcurse = [{}] # toate drumurile deja parcurse de algoritm (succesiunea de chei folosita )
     def __init__(self, info: list[Incuietoare], parinte, used_keys= {}, cost=0, cost_mutare = 0, h=0):
-        self.info=info
-        self.parinte=parinte #parintele din arborele de parcurgere
+        """_summary_
+
+        Args:
+            info : lista de incuietori echivalent cu valoarea lacatului 
+            parinte : nodul parinte din arborele de parcurgere
+            used_keys: cheile folosite pana acum 
+            g :  lungimea drumului creste cu 1 pentru fiecare nod adaugat
+            cost_mutare : costul creste cu 1 pentru fiecare deschidere
+            h : eursitica
+        """
+        self.info=info  
+        self.parinte=parinte 
         self.used_keys = used_keys
         self.cheie = None
         self.cost_mutare = cost_mutare
-        self.g=cost #consider cost=1 pentru o mutare
+        self.g=cost 
         self.h=h
         self.f=self.g+self.h
 
@@ -69,8 +87,19 @@ class NodParcurgere:
         return False
         
     def drum_deja_parcurs(self, cheie):
+        """
+        Verifica daca succesiunea de chei a fost deja parcursa
+
+        Adaug cheia curenta in dictionarul used_keys si verific daca dictionarul nou obtinut
+            a fost intalnit deja 
+        Args:
+            cheie: string cheia curenta 
+
+        Returns:
+            boolean: daca drumul a fost sau nu parcurs deja 
+        """
         copie_dict = deepcopy(self.used_keys)
-        if not cheie in copie_dict:
+        if not cheie in copie_dict: 
             copie_dict[cheie] = 1
         else:
             copie_dict[cheie] += 1
